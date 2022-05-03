@@ -108,6 +108,7 @@ namespace CustomMath
         {
             return new Vec3(v3.x * scalar, v3.y * scalar, v3.z * scalar);
         }
+
         public static Vec3 operator /(Vec3 v3, float scalar)
         {
             return new Vec3(v3.x / scalar, v3.y / scalar, v3.z / scalar);

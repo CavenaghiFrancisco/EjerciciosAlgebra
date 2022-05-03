@@ -4,10 +4,13 @@ using System;
 
 namespace CustomMath
 {
-    public struct Plane
+    public struct CustomPlane
     {
         private Vec3 planeNormal;
         private float planeDistance;
+        private Vec3 planeV1;
+        private Vec3 planeV2;
+        private Vec3 planeV3;
 
         public float distance
         {
@@ -21,24 +24,54 @@ namespace CustomMath
             set { planeNormal = value; }
         }
 
-        public Plane flipped { get { return new Plane(-planeNormal, -planeDistance); } }
+        public Vec3 v1
+        {
+            get { return planeV1; }
+            set { planeV1 = value; }
+        }
 
-        public Plane(Vec3 inNormal, Vec3 inPoint)
+        public Vec3 v2
+        {
+            get { return planeV2; }
+            set { planeV2 = value; }
+        }
+
+        public Vec3 v3
+        {
+            get { return planeV3; }
+            set { planeV3 = value; }
+        }
+
+        public CustomPlane flipped 
+        { 
+            get { return new CustomPlane(-planeNormal, -planeDistance); } 
+        }
+
+        public CustomPlane(Vec3 inNormal, Vec3 inPoint)
         {
             planeNormal = inNormal.normalized;
             planeDistance = -Vec3.Dot(inNormal.normalized, inPoint);
+            planeV1 = Vec3.Zero;
+            planeV2 = Vec3.Zero;
+            planeV3 = Vec3.Zero;
         }
 
-        public Plane(Vec3 inNormal, float d)
+        public CustomPlane(Vec3 inNormal, float d)
         {
             planeNormal = inNormal.normalized;
             planeDistance = d;
+            planeV1 = Vec3.Zero;
+            planeV2 = Vec3.Zero;
+            planeV3 = Vec3.Zero;
         }
 
-        public Plane(Vec3 vecA, Vec3 vecB, Vec3 vecC)
+        public CustomPlane(Vec3 vecA, Vec3 vecB, Vec3 vecC)
         {
             planeNormal = (Vec3.Cross(vecB - vecA, vecC - vecA)).normalized;
             planeDistance = -Vec3.Dot(planeNormal, vecA);
+            planeV1 = vecA;
+            planeV2 = vecB;
+            planeV3 = vecC;
         }
 
         public Vec3 ClosestPointOnPlane(Vec3 point)
@@ -67,7 +100,7 @@ namespace CustomMath
         {
             float dToPoint = GetDistanceToPoint(inPoint);
             float dToPoint1 = GetDistanceToPoint(inPoint1);
-            return (double)dToPoint > 0f && (double)dToPoint1 > 0f || (double)dToPoint <= 0f && (double)dToPoint1 <= 0f;
+            return (double)dToPoint > 0.0f && (double)dToPoint1 > 0.0f || (double)dToPoint <= 0.0f && (double)dToPoint1 <= 0.0f;
         }
 
         public void Set3Points(Vec3 vecA, Vec3 vecB, Vec3 vecC)
@@ -87,9 +120,9 @@ namespace CustomMath
             planeDistance += Vec3.Dot(planeNormal, translation);
         }
 
-        public static Plane Translate(Plane plane, Vec3 translation)
+        public static CustomPlane Translate(CustomPlane plane, Vec3 translation)
         {
-            return new Plane(plane.normal, plane.distance += Vec3.Dot(plane.normal, translation));
+            return new CustomPlane(plane.normal, plane.distance += Vec3.Dot(plane.normal, translation));
         }
     }
 }
