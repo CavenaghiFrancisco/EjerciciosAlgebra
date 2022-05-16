@@ -16,6 +16,8 @@ public class CustomCollisionDetecter : MonoBehaviour
     Vec3 down;
     Vec3 front;
     Vec3 back;
+    List<CustomPlane> planesFromMesh = new List<CustomPlane>();
+    List<Vec3> pointsFromPointCollide = new List<Vec3>();
 
     private void Awake()
     {
@@ -43,41 +45,47 @@ public class CustomCollisionDetecter : MonoBehaviour
     private bool IsPointCollidingWithMesh(Mesh objectMesh, Transform pointToCollide)
     {
         Vec3 pos = new Vec3(transform.position);
-        List<CustomPlane> planesFromMesh = new List<CustomPlane>();
+        planesFromMesh.Clear();
 
         for (int i = 0; i < indices.Length; i += 3)
         {
-            Vec3 v1 = FromLocalToWolrd(new Vec3(objectMesh.vertices[indices[i]]), transform);
-            Vec3 v2 = FromLocalToWolrd(new Vec3(objectMesh.vertices[indices[i + 1]]), transform);
-            Vec3 v3 = FromLocalToWolrd(new Vec3(objectMesh.vertices[indices[i + 2]]), transform);
+            Vec3 v1 = new Vec3(objectMesh.vertices[indices[i]]);
+            Vec3 v2 = new Vec3(objectMesh.vertices[indices[i + 1]]);
+            Vec3 v3 = new Vec3(objectMesh.vertices[indices[i + 2]]);
+
 
             CustomPlane plane = new CustomPlane(v1, v2, v3);
+            plane.v1 = FromLocalToWolrd(v1, transform);
+            plane.v2 = FromLocalToWolrd(v2, transform);
+            plane.v3 = FromLocalToWolrd(v3, transform);
+            plane.normal = Vec3.Cross(plane.v2 - plane.v1, plane.v3 - plane.v1).normalized;
+            plane.distance = -Vec3.Dot(plane.normal, plane.v1);
 
             planesFromMesh.Add(plane);
         }
 
         planesFromMesh = planesFromMesh.OrderByDescending(plane => (Vec3.Cross(plane.v1 - plane.v2, plane.v1 - plane.v3).magnitude) * 0.5f).ToList();
 
-        List<Vec3> pointsFromPointCollide = new List<Vec3>();
+        pointsFromPointCollide.Clear();
 
         for (int i = 0; i < pointToCollide.GetComponent<MeshFilter>().mesh.vertices.Length; i++)
         {
-            Vec3 point = FromLocalToWolrd(new Vec3(pointToCollide.GetComponent<MeshFilter>().mesh.vertices[i]), pointToCollide);
-            
+            Vec3 point = new Vec3(pointToCollide.GetComponent<MeshFilter>().mesh.vertices[i]);
+
             pointsFromPointCollide.Add(point);
         }
 
-        for(int j = 0; j < pointsFromPointCollide.Count; j++)
+        for (int j = 0; j < pointsFromPointCollide.Count; j++)
         {
             int planesCollided = 0;
             for (int i = 0; i < planesFromMesh.Count; i++)
             {
-                if (!planesFromMesh[i].SameSide(pos + planesFromMesh[i].normal, pointsFromPointCollide[j]))
+                if (!planesFromMesh[i].SameSide(FromLocalToWolrd(pointsFromPointCollide[j], pointToCollide), planesFromMesh[i].normal))
                 {
                     planesCollided++;
                 }
             }
-            if(planesCollided == planesFromMesh.Count)
+            if (planesCollided == planesFromMesh.Count)
             {
                 return true;
             }
@@ -167,8 +175,21 @@ public class CustomCollisionDetecter : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(transform.position, new Vec3(Vec3.Distance(left,right), Vec3.Distance(down,up), Vec3.Distance(back,front)));
+        Gizmos.DrawWireCube(transform.position, new Vec3(Vec3.Distance(left, right), Vec3.Distance(down, up), Vec3.Distance(back, front)));
+        Gizmos.color = Color.black;
+        foreach (CustomPlane plane in planesFromMesh)
+        {
+            Gizmos.DrawSphere(plane.normal, 0.05f);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(plane.v1, 0.01f);
+            Gizmos.DrawSphere(plane.v2, 0.01f);
+            Gizmos.DrawSphere(plane.v3, 0.01f);
+            Gizmos.color = Color.black;
+        }
+        foreach (Vec3 pointFromPointCollide in pointsFromPointCollide)
+        {
+            Gizmos.DrawSphere(pointFromPointCollide, 0.001f);
+        }
     }
 #endif
 }
-    

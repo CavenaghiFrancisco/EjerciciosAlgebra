@@ -100,7 +100,7 @@ namespace CustomMath
         {
             float dToPoint = GetDistanceToPoint(inPoint);
             float dToPoint1 = GetDistanceToPoint(inPoint1);
-            return (double)dToPoint > 0.0f && (double)dToPoint1 > 0.0f || (double)dToPoint <= 0.0f && (double)dToPoint1 <= 0.0f;
+            return (double)dToPoint > 0.0f && (double)dToPoint1 > 0.0f || (double)dToPoint < 0.0f && (double)dToPoint1 < 0.0f;
         }
 
         public void Set3Points(Vec3 vecA, Vec3 vecB, Vec3 vecC)

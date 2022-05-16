@@ -90,6 +90,16 @@ namespace CustomMath
             return new Vec3(leftV3.x + rightV3.x, leftV3.y + rightV3.y, leftV3.z + rightV3.z);
         }
 
+        public static Vec3 operator +(Vector3 leftV3, Vec3 rightV3)
+        {
+            return new Vec3(leftV3.x + rightV3.x, leftV3.y + rightV3.y, leftV3.z + rightV3.z);
+        }
+
+        public static Vec3 operator +(Vec3 leftV3, Vector3 rightV3)
+        {
+            return new Vec3(leftV3.x + rightV3.x, leftV3.y + rightV3.y, leftV3.z + rightV3.z);
+        }
+
         public static Vec3 operator -(Vec3 leftV3, Vec3 rightV3)
         {
             return new Vec3(leftV3.x - rightV3.x, leftV3.y - rightV3.y, leftV3.z - rightV3.z);
@@ -128,17 +138,18 @@ namespace CustomMath
         #region Functions
         public override string ToString()
         {
-            return "X = " + x.ToString() + "   Y = " + y.ToString() + "   Z = " + z.ToString();
+            return "(" + x.ToString() + ", " + y.ToString() + ", " + z.ToString() + ")";
         }
         public static float Angle(Vec3 from, Vec3 to)
         {
+            //Formula = Cos @ = producto punto entre los vectores/ producto punto entre las normalizadas de los vectores
             return ((float)Math.Acos((from.x * to.x + from.y * to.y + from.z * to.z) / ((Math.Sqrt(from.x * from.x + from.y * from.y + from.z * from.z)) * (Math.Sqrt(to.x * to.x + to.y * to.y + to.z + to.z)))) / (float)Math.PI * 180);
         }
         public static Vec3 ClampMagnitude(Vec3 vector, float maxLength)
         {
             float norm = (float)Math.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
-            float f = Math.Min(norm, maxLength) / norm;
-            return new Vec3(f * vector.x, f * vector.y, f * vector.y);
+            float escalar = Math.Min(norm, maxLength) / norm;
+            return new Vec3(escalar * vector.x, escalar * vector.y, escalar * vector.z);
         }
         public static float Magnitude(Vec3 vector)
         {
@@ -164,7 +175,7 @@ namespace CustomMath
         }
         public static Vec3 LerpUnclamped(Vec3 a, Vec3 b, float t)
         {
-            return a + (b - a) * t;
+            return (a + (b - a) * t);
         }
         public static Vec3 Max(Vec3 a, Vec3 b)
         {

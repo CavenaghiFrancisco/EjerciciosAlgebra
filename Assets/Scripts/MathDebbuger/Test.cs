@@ -34,11 +34,11 @@ public class Test : MonoBehaviour
         Debug.Log(Vector3.Dot(v, v1));
         Debug.Log(Vec3.Dot(cv, cv1));
 
-        Debug.Log(Vector3.Lerp(v, v1,1));
-        Debug.Log(Vec3.Lerp(cv, cv1,1));
+        Debug.Log("Lerp" + Vector3.Magnitude(Vector3.Lerp(v, v1,1f)));
+        Debug.Log(Vec3.Magnitude(Vec3.Lerp(cv, cv1,1f)));
 
-        Debug.Log(Vector3.LerpUnclamped(v, v1, 1));
-        Debug.Log(Vec3.LerpUnclamped(cv, cv1, 1));
+        Debug.Log(Vector3.Magnitude(Vector3.LerpUnclamped(v, v1, 1f)));
+        Debug.Log(Vec3.Magnitude(Vec3.LerpUnclamped(cv, cv1, 1f)));
 
         Debug.Log(Vector3.Max(v, v1));
         Debug.Log(Vec3.Max(cv, cv1));
@@ -49,7 +49,7 @@ public class Test : MonoBehaviour
         Debug.Log(Vector3.SqrMagnitude(v));
         Debug.Log(Vec3.SqrMagnitude(cv));
 
-        Debug.Log(Vector3.Project(v,v1));
+        Debug.Log("P"+ Vector3.Project(v,v1));
         Debug.Log(Vec3.Project(cv,cv1));
 
         Debug.Log(Vector3.Reflect(v, v1));
