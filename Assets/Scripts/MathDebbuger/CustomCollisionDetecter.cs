@@ -58,7 +58,7 @@ public class CustomCollisionDetecter : MonoBehaviour
             plane.v1 = FromLocalToWolrd(v1, transform);
             plane.v2 = FromLocalToWolrd(v2, transform);
             plane.v3 = FromLocalToWolrd(v3, transform);
-            plane.normal = Vec3.Cross(plane.v2 - plane.v1, plane.v3 - plane.v1).normalized;
+            plane.normal = Vec3.Cross(plane.v2 - plane.v1, plane.v3 - plane.v1).normalized + pos;
             plane.distance = -Vec3.Dot(plane.normal, plane.v1);
 
             planesFromMesh.Add(plane);
